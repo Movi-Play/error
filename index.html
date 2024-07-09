@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Background Example</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 1s ease-in-out;
+      opacity: 0;
+    }
+    .background.active {
+      opacity: 1;
+    }
+    .error-404 {
+      z-index: 1;
+      background-color: #0000;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    
+    
+    .error-404 h1 {
+    font-size: 7em;
+    margin-bottom: 14px;
+    color: #5e5e5e9e;
+}
+
+  </style>
+</head>
+<body>
+  <div class="background bg1 active"></div>
+  <div class="background bg2"></div>
+  <div class="error-404">
+    <h1>404</h1>
+    <p>"¡Vaya! Parece que has llegado a un callejón sin salida. No se pueden enviar más peticiones en este momento."</p>
+  </div>
+
+  <script>
+    const apiKey = 'c2a30192cfbf4e95acbb656bf3af6177';
+    const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
+    let imageUrls = [];
+    let currentIndex = 0;
+
+    function fetchImages() {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          imageUrls = data.results.map(movie => `https://image.tmdb.org/t/p/original${movie.backdrop_path}`);
+          shuffleArray(imageUrls);
+          changeBackground();
+          setInterval(changeBackground, 3000);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function preloadImage(url, callback) {
+      const img = new Image();
+      img.src = url;
+      img.onload = callback;
+    }
+
+    function changeBackground() {
+      if (imageUrls.length > 0) {
+        const bg1 = document.querySelector('.bg1');
+        const bg2 = document.querySelector('.bg2');
+        const activeBg = bg1.classList.contains('active') ? bg1 : bg2;
+        const inactiveBg = bg1.classList.contains('active') ? bg2 : bg1;
+
+        const nextImageUrl = `linear-gradient(to right, #191920bf 0%, #191920bf 100%), url(${imageUrls[currentIndex]})`;
+
+        preloadImage(imageUrls[currentIndex], () => {
+          inactiveBg.style.backgroundImage = nextImageUrl;
+          inactiveBg.classList.add('active');
+          activeBg.classList.remove('active');
+          currentIndex = (currentIndex + 1) % imageUrls.length;
+        });
+      }
+    }
+
+    fetchImages();
+  </script>
+</body>
+</html>
