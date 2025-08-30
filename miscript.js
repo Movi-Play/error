@@ -4,14 +4,14 @@ const users = [
         name: 'Super Admin',
         email: '123321',
         role: 'admin',
-        status: 'banned'
+        status: 'active'
     },
     {
         id: 'admin_002',
         name: 'DJBUDA',
         email: 'DJBUDA@admin.com',
         role: 'admin',
-        status: 'banned'
+        status: 'active'
     },
     {
         id: 'admin_003',
