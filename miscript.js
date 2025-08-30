@@ -4,7 +4,7 @@ const users = [
         name: 'Super Admin',
         email: '123321',
         role: 'admin',
-        status: 'active'
+        status: 'banned'
     },
     {
         id: 'admin_002',
