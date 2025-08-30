@@ -11,7 +11,7 @@ const users = [
         name: 'DJBUDA',
         email: 'DJBUDA@admin.com',
         role: 'admin',
-        status: 'active'
+        status: 'banned'
     },
     {
         id: 'admin_003',
